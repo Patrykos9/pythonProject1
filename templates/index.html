@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+<br>
+<h1>{{ title }}</h1>
+    <br>
+    <br>
+
+
+
+
+      <table class="table table-striped table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Submission time</th>
+            <th scope="col">View number</th>
+            <th scope="col">Vote number</th>
+            <th scope="col">Title</th>
+            <th scope="col">Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for row in data %}
+        <tr>
+            <td>{{ row["submission_time"] }}</td>
+            <td>{{ row["view_number"] }}</td>
+            <td>{{ row["vote_number"] }}</td>
+            <td><a href="{{ url_for('display_question', question_id=row['id']) }}">{{ row["title"] }}</a></td>
+            <td>{{ row["message"] }}</td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}

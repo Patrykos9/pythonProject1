@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+
+<h1>Add new question</h1>
+<form action="{{ url_for("add_question") }}", method="POST">
+        <p>Question title<br>
+        <input type="text" name="title" required minlength="10" size="51">
+        </p>
+
+        <p>Question message<br>
+        <textarea cols="50" rows="10" name="message" autofocus required minlength="10"></textarea>
+        </p>
+        <br>
+        <button type="submit" class="btn btn-primary">Add question</button>
+    </form>
+
+
+{% endblock %}
