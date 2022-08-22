@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}List Users{% endblock %}
+{% block content %}
+  <h1 style="margin-top: 45px;text-align: center;">{{ 'Profile page' if question or answers or comments else 'Users List' }}</h1>
+  <div style="margin: 0 auto;width: 833px;border: 1px solid #fff">
+    <table style="border: 5px solid #61c3ff;">
+      <thead>
+        <tr>
+          <th align="center" style="width: 350px;">User name</th>
+          <th align="center" style="width: 200px;">Registration date</th>
+          <th align="center">Reputation</th>
+          <th align="center">Questions</th>
+          <th align="center">Answers</th>
+          <th align="center">Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users_data %}
+          <tr>
+            <td><a href="/user/{{ user['userid'] }}">{{ user['email'] }}</a></td>
+            <td align="center">{{ user['regtime'] }}</td>
+            <td align="center">{{ user['reputation'] }}</td>
+            <td align="center">{{ user['question_count'] }}</td>
+            <td align="center">{{ user['answer_count'] }}</td>
+            <td align="center">{{ user['comment_count'] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if questions %}
+  <div class="user_content">
+    <h2 style="margin-top: 45px;text-align: center;">Asked question by the user</h2>
+    <div style="margin: 0 auto;width: 1100px;border: 1px solid #fff">
+      <table style="border: 5px solid #61c3ff;">
+        <thead>
+          <tr>
+            <th align="left" style="width: 200px;">Title</th>
+            <th align="left" style="width: 700px;">Message</th>
+            <th align="left" style="width: 200px;">Submission time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for question in questions %}
+            <tr>
+              <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+              <td>{{ question['message'][:90]  | safe + '...' if question['message']|length > 90 else question['message'] | safe }}</td>
+              <td>{{ question['submission_time'] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+  {% if answers %}
+  <div class="user_content">
+    <h2 style="margin-top: 45px;text-align: center;">Answers by the user</h2>
+    <div style="margin: 0 auto;width: 900px;border: 1px solid #fff">
+      <table style="border: 5px solid #61c3ff;">
+        <thead>
+          <tr>
+            <th align="left" style="width: 700px;">Message</th>
+            <th align="left" style="width: 200px;">Submission time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for answer in answers %}
+            <tr>
+              <td><a href="/question/{{ answer['question_id'] }}">{{ answer['message'][:90]  | safe + '...' if answer['message']|length > 90 else answer['message'] | safe }}</a></td>
+              <td>{{ answer['submission_time'] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+  {% if comments %}
+  <div class="user_content">
+    <h2 style="margin-top: 45px;text-align: center;">Comments by the user</h2>
+    <div style="margin: 0 auto;width: 900px;border: 1px solid #fff">
+      <table style="border: 5px solid #61c3ff;">
+        <thead>
+          <tr>
+            <th align="left" style="width: 700px;">Message</th>
+            <th align="left" style="width: 200px;">Submission time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for comment in comments %}
+            <tr>
+              <td><a href="/question/{{ comment['question_id'] }}">{{ comment['message'][:90]  | safe + '...' if comment['message']|length > 90 else comment['message'] | safe }}</a></td>
+              <td>{{ comment['submission_time'] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

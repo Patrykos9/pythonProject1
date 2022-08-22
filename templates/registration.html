@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+{% block title %}Add a tag to the question{% endblock %}
+{% block content %}
+    <div id="registration">
+        <form action="/registration" method="POST">
+            <p><i class="fa fa-user"></i><input type="email" name="email" placeholder="Enter your email address" required></p>
+            <p><i class="fa fa-lock"></i><input type="password" name="password" placeholder="Enter your password" required></p>
+            <p><input type="submit" value="Register"></p>
+        </form>
+    </div>
+{% endblock %}
