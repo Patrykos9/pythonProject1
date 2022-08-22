@@ -1,10 +1,13 @@
+from psycopg2.extras import RealDictCursor
+from datetime import datetime
 import connection
 
 @connection.connection_handler
-def list_questions(cursor):
-    cursor.execute(f'''
-                    SELECT * FROM question;
-                    ''')
+def list_questions(cursor, order_by, order):
+    cursor.execute(f"""
+                    SELECT * FROM question 
+                    ORDER BY {order_by} {order};
+                    """)
     questions = cursor.fetchall()
     return questions
 
@@ -65,3 +68,99 @@ def add_new_data(cursor, dict, type):
                         'message': dict['message'],
                         'submission_time': dt,
                         'edited_count': dict['edited_count']})
+
+@connection.connection_handler
+def get_question_vote_number(cursor, question_id):
+    cursor.execute("""
+                    SELECT vote_number FROM question
+                    WHERE id = %(question_id)s;
+                    """,
+                     {'question_id': question_id})
+    vote_number = cursor.fetchall()
+    return vote_number[0]
+
+@connection.connection_handler
+def update_question_vote_number(cursor, question_id, vote_number):
+    cursor.execute("""
+                    UPDATE question
+                    SET vote_number = %(vote_number)s
+                    WHERE id = %(question_id)s;
+                    """,
+                    {'question_id': question_id,
+                    'vote_number': vote_number})
+
+@connection.connection_handler
+def route_edit_question(cursor, question_id):
+    cursor.execute("""
+                    SELECT * FROM question
+                    WHERE id = %(question_id)s;
+                    """,
+                   {'question_id': question_id})
+
+    question_to_edit = cursor.fetchall()
+    return question_to_edit[0]
+
+@connection.connection_handler
+def edit_question(cursor, question_id, edited_title, edited_message):
+    cursor.execute("""
+                    UPDATE question
+                    SET title = %(edited_title)s, message = %(edited_message)s
+                    WHERE id = %(question_id)s;
+                    """,
+                   {'question_id': question_id,
+                    'edited_title': edited_title,
+                    'edited_message': edited_message})
+
+
+@connection.connection_handler
+def add_new_user(cursor: RealDictCursor, email, password):
+    date = datetime.now().strftime("%b %d %Y %H:%M:%S")
+    query = """
+        INSERT INTO users (email, password, registration_time, reputation)
+        VALUES (%(email)s, %(password)s, %(date)s, 0)
+    """
+    data = {
+        'email': email,
+        'password': password,
+        'date': date
+    }
+    cursor.execute(query, data)
+
+@connection.connection_handler
+def list_users(cursor: RealDictCursor, userid=None):
+    where = f'WHERE userid = {userid}' if userid else ''
+    query = f"""
+    SELECT
+    users.userid AS userid,
+    users.email AS email,
+    users.registration_time AS regtime,
+    users.reputation AS reputation,
+    COUNT(DISTINCT question.id) AS question_count,
+    COUNT(DISTINCT answer.id) AS answer_count,
+    COUNT(DISTINCT comment.id) AS comment_count
+    FROM users
+    LEFT JOIN question
+    ON users.userid = question.user_id
+    LEFT JOIN answer
+    ON users.userid = answer.user_id
+    LEFT JOIN comment
+    ON users.userid = comment.user_id
+    {where}
+    GROUP BY userid
+    ORDER BY reputation DESC
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_record_by_email(cursor: RealDictCursor, email):
+    query = """
+        SELECT * FROM users
+        WHERE email = %(email)s
+    """
+    data = {
+        'email': email
+    }
+    cursor.execute(query, data)
+    return cursor.fetchone()

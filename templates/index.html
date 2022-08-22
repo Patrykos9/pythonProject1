@@ -8,6 +8,29 @@
 {% block content %}
 <br>
 <h1>{{ title }}</h1>
+    {% if title == "List questions" %}
+    <p>
+        <form action="{{ url_for('all_question', order_by=order_by, order=order) }}" method="GET">
+            <label for="order_by">Sort questions by: </label>
+            <select name="order_by" id="order_by">
+                {% for key, option in select_options.items() %}
+                    <option {% if key == order_by %}selected{% endif %}
+                            value="{{ key }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+            <label for="order">Order: </label>
+            <select name="order" id="order">
+                {% for option in order_options %}
+                    <option {% if option == order %} selected {% endif %}
+                            value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+
+           <button type="submit" class="btn btn-dark">Sort</button>
+
+        </form>
+    </p>
+    {% endif %}
     <br>
     <br>
 
@@ -21,6 +44,7 @@
             <th scope="col">View number</th>
             <th scope="col">Vote number</th>
             <th scope="col">Title</th>
+            <th scope="col">Vote</th>
             <th scope="col">Message</th>
         </tr>
     </thead>
@@ -31,6 +55,10 @@
             <td>{{ row["view_number"] }}</td>
             <td>{{ row["vote_number"] }}</td>
             <td><a href="{{ url_for('display_question', question_id=row['id']) }}">{{ row["title"] }}</a></td>
+            <td>
+                <a href="{{ url_for('vote_for_question', question_id=row['id'], vote_type='up', title=title) }}"><img src="/static/like.png.png" width="30" height="30" alt="Like"></a>
+                <a href="{{ url_for('vote_for_question', question_id=row['id'], vote_type='down', title=title) }}"><img src="/static/dislike.ico" width="30" height="30" alt="Dislike"></a>
+            </td>
             <td>{{ row["message"] }}</td>
 
         </tr>

@@ -5,3 +5,4 @@ Jinja2==2.10.3
 MarkupSafe==1.1.1
 psycopg2==2.9.3
 Werkzeug==0.16.0
+bcrypt~=3.2.2

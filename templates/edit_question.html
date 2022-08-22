@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+    <h1>Edit question</h1>
+    <form action="{{ url_for("edit_question", question_id=question_id) }}" method="POST">
+        <p>Question title<br>
+            <input type="text" name="title" required minlength="10" value="{{ question["title"] }}" size="51">
+        </p>
+
+        <p>Question message<br>
+            <textarea cols="50" rows="10" name="message" autofocus required minlength="10">{{ question["message"] }}</textarea>
+        </p>
+        <br>
+        <button type="submit">Submit question</button>
+    </form>
+
+    <p>
+        <a href="{{ url_for("display_question", question_id=question_id) }}">Go back to question</a>
+    </p>
+
+{% endblock %}
