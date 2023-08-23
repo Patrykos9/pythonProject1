@@ -7,7 +7,7 @@ All project have MVC architecture from start.
 <h1 align="center">Hi 👋, I'm Patryk Kanon</h1>
 <h3 align="center">A passionate fullstack developer from Poland</h3>
 
-- 🔭 I’m currently working on **python**
+- 🔭 I’m currently working on **Python Web App like Twitter / X**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
